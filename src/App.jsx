@@ -1,8 +1,11 @@
 import { useEffect, useState } from "react";
 import {Configuration, OpenAIApi} from "openai";
 
+import "./root.css";
+
+import micIcon from "./Assets/mic.png";
+
 const App = () => {
-  const [prompt, setPrompt] = useState("");
   const [apiResponse, setApiResponse] = useState("");
   const [loading, setLoading] = useState(false);
 
@@ -29,7 +32,7 @@ const App = () => {
     try {
       const result = await openai.createCompletion({
         model: "text-davinci-003",
-        prompt: prompt,
+        prompt: promptPreview,
         temperature: 0.3,
         max_tokens: 1000,
         top_p: 1.0,
@@ -41,13 +44,13 @@ const App = () => {
       setApiResponse("Oopss hexstudio is having issues with openai :(.");
     }
     setLoading(false);
+    setPromptPreview("");
   };
 
   const startRecordController = () => {
     if (isRecording) {
       microphone.start();
       microphone.onend = () => {
-        // console.log("continue..");
         microphone.start();
       };
     } else {
@@ -62,15 +65,13 @@ const App = () => {
         .map((result) => result.transcript)
         .join("");
       setPromptPreview(recordingResult);
-      microphone.onerror = (event) => {
-        console.log(event.error);
-      };
+      console.log(promptPreview.length)
+      microphone.onerror = () => {};
     };
   };
 
   useEffect(() => {
     startRecordController();
-    if (window.innerWidth > 690) alert("Only accessible on mobile");
   }, [isRecording]);
 
   return (
@@ -78,27 +79,26 @@ const App = () => {
       <div className="container">
         {/*AI CONTAINER*/}
         <div className="ai-response-container">
-          <form onSubmit={handleSubmit}>
-            <textarea type="text" value={promptPreview} placeholder="Speak and you shall see" onChange={(e) => setPrompt(e.target.value)}></textarea>
-            <button disabled={loading || promptPreview.length === 0} type="submit">
-              {loading ? "Generating..." : "Generate"}
-            </button>
+          <form id="prompt-container" onSubmit={handleSubmit}>
+            <textarea id="mic-input-area" type="text" spellCheck={false} value={promptPreview} placeholder="..." onChange={(e) => setPromptPreview(e.target.value)}></textarea>
+            {apiResponse && (
+              <div className="api-response">
+                <h3>{apiResponse}</h3>
+              </div>
+            )}
+            {isRecording && promptPreview.length > 0 ? 
+              null : 
+              <button className="generate-response-button" disabled={loading || promptPreview.length === 0} type="submit">{loading ? "Generating..." : "Generate"}</button>
+            }
           </form>
         </div>
-        {apiResponse && (
-          <div>
-            <h3>{apiResponse}</h3>
-          </div>
-        )}
 
         {/*SPEECH TP TEXT*/}
-        <div>
-          <div className="sppech-to-text-container">
-            {isRecording ? <span>Recording... </span> : <span>Stopped </span>}
-            <button onClick={() => setisRecording((prevState) => !prevState)}>
-              Start/Stop
-            </button>
-          </div>
+        <div className="speach-to-text-container">
+          {isRecording ? 
+            <img id="mic-button" className="recording-on" src={micIcon} onClick={() => setisRecording((prevState) => !prevState)} /> :
+            <img id="mic-button" className="recording-off" src={micIcon} onClick={() => setisRecording((prevState) => !prevState)} />
+          }
         </div>
       </div>
     </>

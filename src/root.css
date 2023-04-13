@@ -1,0 +1,78 @@
+body, html {
+    height: 100vh;
+    width: 100vw;
+    padding: 0;
+    margin: 0;
+    overflow: hidden;
+}
+
+.container {
+    align-items: center;
+    width: 100%;
+    height: 100%;
+}
+
+.ai-response-container {
+    position: relative;
+    margin-top: 60vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.speach-to-text-container {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.api-response {
+    position: relative;
+    text-align: center;
+}
+
+#prompt-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+#prompt-container textarea {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100vh;
+    width: 100vw;
+    font-size: 4em;
+    text-align: center;
+    padding: 0;
+    margin: 0;
+}
+
+#prompt-container button {
+    position: relative;
+}
+
+#mic-button {
+    width: 20%;
+    border-radius: 100%;
+}
+
+.recording-on {
+    -webkit-animation: fadeinout 1s linear infinite;
+    animation: fadeinout 1s linear infinite;
+}
+
+@-webkit-keyframes fadeinout {
+    0%,100% {opacity: 0.1;}
+    50% {opacity: 1;}
+}
+  
+@keyframes fadeinout {
+    0%,100% {opacity: 0.1;}
+    50% {opacity: 1;}
+}
